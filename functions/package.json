@@ -15,5 +15,17 @@
     "firebase-functions": "^2.0.3",
     "pug": "^2.0.3"
   },
-  "private": true
+  "private": true,
+  "devDependencies": {
+    "babel-core": "^6.26.3",
+    "babel-loader": "^7.0.0",
+    "babel-preset-latest": "^6.24.1",
+    "gulp": "^4.0.0",
+    "gulp-concat": "^2.6.1",
+    "gulp-csso": "^3.0.1",
+    "gulp-sass": "^4.0.1",
+    "gulp-uglify": "^3.0.1",
+    "webpack": "^4.20.2",
+    "webpack-stream": "^5.1.1"
+  }
 }
