@@ -1,0 +1,96 @@
+.homepage{
+  width: 100%;
+  height: 100vh;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: $pg-primary-color;
+  .sidebar{
+    width: 50%;
+    height: 50%;
+    border-radius: 4px;
+    background: $pg-secondary-color;
+    .wrapper{
+      width: 90%;
+      height: 100%;
+      margin: 0 auto;
+      line-height: 100%;
+      position: relative;
+      .v-center{
+        position: absolute;
+        top: 50%;
+        left: 0;
+        right: 0;
+        transform: translateY(-50%);
+        .btn{
+          color: $pg-primary-color;
+          border-color: $pg-primary-color;
+          background: transparent;
+          &:hover , &.active{
+            color: $pg-secondary-color;
+            border-color: transparent;
+            background: $pg-primary-color;
+          }
+        }
+        .social-login {
+          a {
+            transition: all 500ms;
+            display: inline-block;
+            height: 40px;
+            width: 40px;
+            margin: 0 auto;
+            background: #007bff;
+            color: #fff;
+            border-radius: 50%;
+            margin: 0 auto;
+            padding-top: 12px;
+            margin-right: 5px;
+            border: 1px solid transparent;
+
+            &.google {
+              background: #db4437;
+
+              &:hover {
+                border-color: #db4437;
+                color: #db4437;
+                background: transparent;
+              }
+            }
+
+            &.facebook {
+              background: #4267b2;
+
+              &:hover {
+                border-color: #4267b2;
+                color: #4267b2;
+                background: transparent;
+              }
+            }
+
+            &.twitter {
+              background: #1da1f2;
+
+              &:hover {
+                border-color: #1da1f2;
+                color: #1da1f2;
+                background: transparent;
+              }
+            }
+
+            &.github {
+              background: #24292e;
+
+              &:hover {
+                border-color: #24292e;
+                color: #24292e;
+                background: transparent;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
