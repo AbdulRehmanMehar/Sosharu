@@ -8,6 +8,7 @@ app.set('views', __dirname + '/resources/views');
 app.set('view engine', 'pug');
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
+app.use(express.json());
 app.use('/', mainController);
 
 exports.app = functions.https.onRequest(app);
