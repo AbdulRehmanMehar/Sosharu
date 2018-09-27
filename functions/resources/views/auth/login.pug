@@ -1,0 +1,36 @@
+extends ../layout.pug
+block head 
+  title Login - Sosharu
+block content
+  .homepage
+    .sidebar
+      .wrapper
+        .v-center
+          .mb-5.text-center
+            h1 Login to Sosharu
+            p Enter your Credentials 
+          form#silent-form(action='/login', method='post')
+            .form-group
+              label(for='mail') Email or Phone
+              input#mail.form-control(type='text', placeholder='Enter email or phone' , name='email')
+            .form-group
+              label(for='pwd') Password
+              input#pwd.form-control(type='password', placeholder='Password', name='password')
+              small.form-text.text-muted.text-right
+                a(href="/recovery") Forgot Password
+            .form-group
+              button.btn.btn-secondary.form-control(type='submit') Login
+          p.text-center 
+            a(href="/register") Register 
+            | or Continue with
+          .social-login.text-center
+            a.google(href='#')
+              i.fab.fa-google-plus-g.fa-lg
+            a.facebook(href='#')
+              i.fab.fa-facebook-f.fa-lg
+            a.twitter(href='#')
+              i.fab.fa-twitter.fa-lg
+            a.github(href='#')
+              i.fab.fa-github.fa-lg
+
+
