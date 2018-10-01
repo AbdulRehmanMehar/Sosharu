@@ -16,10 +16,11 @@ block content
             .form-group
               label(for='pwd') Password
               input#pwd.form-control(type='password', placeholder='Password', name='password')
-              small.form-text.text-muted.text-right
+              span.form-text.text-muted.text-right
                 a(href="/recovery") Forgot Password
+            input(type="hidden", name="_csrf", value=csrfToken)
             .form-group
-              button.btn.btn-secondary.form-control(type='submit') Login
+              button.btn.btn-primary.form-control(type='submit') Login
           p.text-center 
             a(href="/register") Register 
             | or Continue with
