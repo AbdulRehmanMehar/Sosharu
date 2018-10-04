@@ -11,11 +11,12 @@ let isPhoneNumber = (data) => {
 };
 
 router.get('/', (req, res) => {
-  res.render('auth/login' , { csrfToken: req.csrfToken() });
+  res.render('auth');
 });
 
+
 router.get('/register', (req, res) => {
-  res.render('auth/register' , { csrfToken: req.csrfToken() });
+  res.render('auth/register');
 });
 
 router.post('/register', 
@@ -25,7 +26,9 @@ router.post('/register',
     return firebase.auth().getUserByEmail(value).then((userRecord) => {
       if(userRecord) {
         return Promise.reject("E-mail already in use.");
-      }else{
+      }
+    }).catch((err) => {
+      if (err.code === 'auth/user-not-found') {
         return value;
       }
     });
@@ -56,9 +59,9 @@ router.post('/register',
     displayName: req.body.name,
     disabled: false
   }).then((userRecord) => {
-      // See the UserRecord reference doc for the contents of userRecord.
+      req.session.user = userRecord.uid;
       console.log("Successfully created new user:", userRecord.uid);
-      res.status(200).json({msg: "It Works"});
+      res.status(200).json({msg: "It Works", param: "error"});
     })
     .catch((error) => {
       console.log("Error creating new user:", error);
@@ -67,7 +70,7 @@ router.post('/register',
 });
 
 router.get('/recovery', (req,res) => {
-  res.render('auth/recovery' , { csrfToken: req.csrfToken() });
+  res.render('auth/recovery');
 });
 
 module.exports = router;
