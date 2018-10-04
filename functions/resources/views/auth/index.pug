@@ -1,0 +1,54 @@
+extends ../layout.pug
+block head 
+  title Login - Sosharu
+block content
+  .form-container
+    h1.brand
+      span So
+      | sharu
+    .wrapper.animated.bounceInLeft
+      .login
+        h3 Login
+        form(method='POST', action='/auth/login')
+          p Enter your credentials.
+          p
+            label(for='l-email') Email
+            input(type='text', id='l-email', name='l_email')
+          p
+            label(for='l-pwd') Password
+            input(type='password', id='l-pwd', name='l_pwd')
+          p
+            label Login
+            button(type='submit') Submit
+          p 
+            label Facebook Login
+            a(href="/auth/login/facebook", id="fb-login") 
+              i.fab.fa-facebook-f 
+              span &nbsp; &nbsp; Continue with Facebook
+          p 
+            label Google-Plus Login
+            a(href="/auth/login/google", id="gplus-login") 
+              i.fab.fa-google
+              span &nbsp; &nbsp; Continue with Google Plus 
+      .register
+        h3 Register
+        form(method='POST', action='/auth/register')
+          p Please enter your details and submit the form.
+          p
+            label(for='r-name') Name
+            input(type='text', id='r-name', name='r_name')
+          p
+            label(for='r-email') Email
+            input(type='email', id='r-email', name='r_email')
+          p
+            label(for='r-password') Password
+            input(type='password', id='r-password', name='r_password')
+          p
+            label(for='r-cpassword') Confirm Password
+            input(type='password', id='r-cpassword', name='r_cpassword')
+          p
+            label Register
+            button(type='submit') Submit
+
+
+
