@@ -3,6 +3,8 @@ $(document).ready(() => {
   // Submit Forms Silently.
   $('#silent-form').submit((e) => {
     e.preventDefault();
+    $(e.target).children('input').removeClass('is-invalid');
+    $(e.target).children('small.invalid-feedback').html('');
     $.ajax({
       type: $(e.target).attr('method'),
       url: $(e.target).attr('action'),
@@ -15,8 +17,6 @@ $(document).ready(() => {
         console.log(errors);
         $(errors).each((i,{param, msg}) => {
           // Removing Old Messages
-          $(e.target).children('input').removeClass('is-invalid');
-          $(e.target).children('small.invalid-feedback').html('');
           // Setting New Messages
           $(`[name=${param}]`).addClass('is-invalid');
           $(`[name=${param}]`).next().html(msg);
