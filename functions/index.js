@@ -1,10 +1,9 @@
 const functions = require('firebase-functions');
 const bodyParser = require('body-parser');
-const session = require('express-session');
-const csrf = require('csurf');
+const passport = require('passport');
+const cookieSession = require('cookie-session');
 const helmet = require('helmet');
 const compression = require('compression');
-const cookieParser = require('cookie-parser');
 const express = require('express');
 const mainController = require('./controllers/auth');
 const authHandler = require('./middlewares/authHandler');
@@ -22,22 +21,15 @@ app.set('view engine', 'pug');
 //                     Express Modules
 // ------------------------------------------------------
 
-app.use(cookieParser());
-app.use(session({
-  key: 'user_sid',
-  secret: "ZeAG3U1g-rjkbq70Ga7vEYW0yxFsgxQTbu0M",
-  resave: false,
-  saveUninitialized: false,
-  cookie: {
-    secure: true,
-    maxAge: 60000,
-    expires: 600000
-  }
+app.set('trust proxy', 1);
+app.use(cookieSession({
+  maxAge: 15 * 24 * 60 * 60 * 1000,
+  keys: [keys.session.enctryptionkey]
 }));
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json()); 
-app.use(express.json());
-app.set('trust proxy', 1);
+app.use(bodyParser.json());
+app.use(passport.initialize());
+app.use(passport.session());
 app.use(compression()); // makes app faster
 
 // ------------------------------------------------------
