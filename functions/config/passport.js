@@ -1,6 +1,7 @@
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20');
 const FacebookStrategy = require('passport-facebook');
+const User = require('../models/user');
 const keys = require('./keys');
 
 let getImg4mGp = (urI) => { // Get Full Size Image From G+
