@@ -5,7 +5,8 @@ const cookieSession = require('cookie-session');
 const helmet = require('helmet');
 const compression = require('compression');
 const express = require('express');
-const mainController = require('./controllers/auth');
+const keys = require('./config/keys');
+const authController = require('./controllers/auth');
 const authHandler = require('./middlewares/authHandler');
 const isAuthenticated = require('./middlewares/isAuthenticated');
 const app = express();
@@ -24,7 +25,7 @@ app.set('view engine', 'pug');
 app.set('trust proxy', 1);
 app.use(cookieSession({
   maxAge: 15 * 24 * 60 * 60 * 1000,
-  keys: [keys.session.enctryptionkey]
+  keys: [keys.encskey]
 }));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -50,10 +51,10 @@ app.use(helmet.noCache());
 //                     Controllers & Middlewares
 // ------------------------------------------------------
 
-app.use(authHandler); // Removes cookie from browser if user isn't authenticated. 
-app.use('/auth', mainController);
+// app.use(authHandler); // Removes cookie from browser if user isn't authenticated. 
+app.use('/auth', authController);
 app.get('/', (req, res) => {
-  if (req.session.user && req.cookies.user_sid) {
+  if (req.session.user) {
     res.send('You\'re Logged In');
   } else {
     res.redirect('/auth');
