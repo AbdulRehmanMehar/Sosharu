@@ -70,7 +70,8 @@ ul {
       padding: 1em;
       border: 1px solid #c9e6ff;
     }
-
+    span.is-invalid{color: #f00;}
+    input.is-invalid{border: 1px solid #f00;}
     button{
       cursor: pointer;
       background: #c9e6ff;

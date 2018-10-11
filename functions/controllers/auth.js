@@ -1,6 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const firebase = require('../config/firebase-init');
+const passport = require('passport');
+const passportSetup = require('../config/passport');
+// const firebase = require('../config/firebase-init');
+const User = require('../models/user');
 const { check, validationResult } = require('express-validator/check');
 
 let isPhoneNumber = (data) => {
@@ -14,34 +17,23 @@ router.get('/', (req, res) => {
   res.render('auth');
 });
 
-
-router.get('/register', (req, res) => {
-  res.render('auth/register');
-});
+/* jshint ignore:start */
 
 router.post('/register', 
 [
-  check("name").isLength({min: 3}).withMessage("Name must 3 or more characters long."),
-  check("email").custom((value, { req, loc, path }) => {
-    return firebase.auth().getUserByEmail(value).then((userRecord) => {
-      if(userRecord) {
-        return Promise.reject("E-mail already in use.");
-      }
-    }).catch((err) => {
-      if (err.code === 'auth/user-not-found') {
-        return value;
-      }
-    });
+  check("r_name").isLength({min: 3}).withMessage("Name must 3 or more characters long."),
+  check("r_email").custom(value => {
+    return User.checkEmailAvailable(value);
   }),
-  check("email").isEmail().withMessage("E-mail is Invalid."),
-  check("password").isLength({ min: 8 }).withMessage("Password must 8 or more characters long."),
-  check("confirm_password").custom((value, { req, loc, path }) => {    
-      if (value !== req.body.password) {
-        throw new Error("Passwords don't match");
-      } else {
-        return value;
-      }
-    })
+  check("r_email").isEmail().withMessage("E-mail is Invalid."),
+  check("r_password").isLength({ min: 8 }).withMessage("Password must 8 or more characters long."),
+  check("r_cpassword").custom((value, { req, loc, path }) => {    
+    if (value !== req.body.r_password) {
+      throw new Error("Passwords don't match");
+    } else {
+      return value;
+    }
+  })
     
 ],
 (req,res) => {
@@ -68,9 +60,33 @@ router.post('/register',
     });
 
 });
+/* jshint ignore:end */
 
-router.get('/recovery', (req,res) => {
-  res.render('auth/recovery');
+router.post('/login', 
+[
+  check("l_email").custom(value => {
+    return User.checkEmailExists(value);
+  }),
+  check('l_email').isEmail().withMessage("E-mail is Invalid."),
+  check('l_pwd').isLength({ min: 1 }).withMessage("Password is Invalid.")
+], 
+(req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(422).json({
+      errors: errors.array()
+    });
+  }
+  res.status(200).json({msg: 'It Works!', param: 'error'});
 });
+
+router.get('/google', passport.authenticate('google', {
+  scope: ['profile']
+}));
+router.get('/google/redirect', passport.authenticate('google'), (req, res) => res.redirect('/'));
+
+router.get('/facebook', passport.authenticate('facebook'));
+router.get('/facebook/redirect', passport.authenticate('facebook'), (req, res) => res.redirect('/'));
+
 
 module.exports = router;
