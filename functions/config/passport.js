@@ -9,6 +9,10 @@ let getImg4mGp = (urI) => { // Get Full Size Image From G+
 };
 
 
+let handleSocialCallBack = (accessToken, refreshToken, profile, done) => {
+  console.log(profile);
+};
+
 /*
 ---------- serialize & deserialize process
 */
@@ -31,8 +35,8 @@ passport.use(new FacebookStrategy({
   clientID: keys.facebook.clientID,
   clientSecret: keys.facebook.clientSecret,
   callbackURL: keys.facebook.callbackURL
-}, (accessToken, refreshToken, profile, done) => {
-  
+}, (accessToken, refreshToken, profile, done) => { 
+  handleSocialCallBack(accessToken, refreshToken, profile, done); 
 }));
 
 /*
@@ -44,5 +48,6 @@ passport.use(new GoogleStrategy({
   clientSecret: keys.google.clientSecret,
   callbackURL: keys.google.callbackURL
 }, (accessToken, refreshToken, profile, done) => {
-  
+  handleSocialCallBack(accessToken, refreshToken, profile, done);
 }));
+
