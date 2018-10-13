@@ -6,10 +6,35 @@ db.settings({
 });
 const collection = db.collection('users');
 
+let generateID = () => {
+  let d = new Date().getTime();
+  if (typeof performance !== 'undefined' && typeof performance.now === 'function') {
+    d += performance.now(); //use high-precision timer if available
+  }
+  return 'xxxxx4xxxyxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+    let r = (d + Math.random() * 16) % 16 | 0;
+    d = Math.floor(d / 16);
+    return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+  });
+};
+
+let generateToken = () => {
+  let d = new Date().getTime();
+  if (typeof performance !== 'undefined' && typeof performance.now === 'function') {
+    d += performance.now(); //use high-precision timer if available
+  }
+  return 'xxxxxxxxxxxx4xxxyxxxxxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+    let r = (d + Math.random() * 16) % 16 | 0;
+    d = Math.floor(d / 16);
+    return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+  });
+};
+
+
 let getUserByID = (id) => {
-    collection.doc(id).get()
+  return collection.doc(id).get()
     .then((doc) => {
-      if(!doc.exists){
+      if (!doc.exists) {
         console.log('No User with id', id);
         return false;
       }
@@ -22,26 +47,34 @@ let getUserByID = (id) => {
 };
 
 let getByEmailAndPassword = (email, password) => {
+  let $error = 'Credentials are Incorrect.';
   return collection.where('email', '==', email).get()
     .then((snapshot) => {
-      if(snapshot.empty) return Promise.reject('User doesn\'t Exists.');
+      if (snapshot.empty) return $error;
       snapshot.docs.forEach(document => {
-        if (!document.exists) return Promise.reject('User doesn\'t Exists.');
-        console.log(document.data());
-        return document.data();
+        if (!document.exists) return $error;
+        let user = document.data();
+        if (bcrypt.compareSync(password, user.password)) {
+          console.log(user);
+          return user;
+        } else {
+          return $error;
+        }
       });
+    }).catch(err => {
+      return err;
     });
 };
 
-let createUser = ({id, name, email, photo, password, verified}) => {
-  let docRef = collection.doc(id);
+let createUser = ({ name, email, photo, password, verified }) => {
+  let docRef = collection.doc(generateID());
   docRef.set({
     name: name,
     email: email,
     photo: photo || null,
     password: bcrypt.hashSync(password, 10),
-    verified: verified,
-    verficationToken: verficationToken,
+    verified: false,
+    verficationToken: generateToken(),
     createdAt: Date.now()
   });
 };
@@ -52,30 +85,48 @@ let checkEmailAvailable = (email) => {
     .then(snapshot => {
       if (!snapshot.empty) return Promise.reject("Email already in use.");
       snapshot.docs.forEach(document => {
-        if (!document.exists) { 
+        if (!document.exists) {
           return email;
         } else {
           return Promise.reject("Email already in use.");
         }
       });
-    }).catch(err => {return Promise.reject(err);});
+    }).catch(err => { return Promise.reject(err); });
 };
 
-let checkEmailExists = (email) => { 
+let checkEmailExists = (email) => {
   return collection.where('email', '==', email).get()
     .then(snapshot => {
-      if(!snapshot.empty){
+      if (!snapshot.empty) {
         return email;
-      }else{
+      } else {
         return Promise.reject('No user found with this email.');
       }
-    }).catch(err => {return Promise.reject(err);});
+    }).catch(err => { return Promise.reject(err); });
+};
+
+let checkPasswordCorrect = (email, password) => {
+  return collection.where('email', '==', email).get()
+    .then(snapshot => {
+      if (snapshot.empty) throw new Error('Something went wrong.');
+      snapshot.docs.forEach(document => {
+        if (!document.exists) throw new Error('Something went wrong.');
+        let user = document.data();
+        if (bcrypt.compareSync(password, user.password)) {
+          return password;
+        } else {
+          throw new Error('Incorrect Password.');
+        }
+      });
+    }).catch(err => { throw new Error(err) });
 };
 
 module.exports = {
-  getUserByID, // Method
-  createUser, // Method
+  getUserByID,
+  getByEmailAndPassword,
+  createUser,
   checkEmailAvailable,
-  checkEmailExists, // Method
+  checkEmailExists,
+  checkPasswordCorrect,
   collection, // Firestore Collection
 };
