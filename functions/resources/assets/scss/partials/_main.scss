@@ -1,96 +1,40 @@
-// .homepage{
-//   width: 100%;
-//   height: 100vh;
-//   position: relative;
-//   display: flex;
-//   flex-direction: column;
-//   justify-content: center;
-//   align-items: center;
-//   background-color: $pg-primary-color;
-//   .sidebar{
-//     width: 50%;
-//     height: 50%;
-//     border-radius: 4px;
-//     background: $pg-secondary-color;
-//     .wrapper{
-//       width: 90%;
-//       height: 100%;
-//       margin: 0 auto;
-//       line-height: 100%;
-//       position: relative;
-//       .v-center{
-//         position: absolute;
-//         top: 50%;
-//         left: 0;
-//         right: 0;
-//         transform: translateY(-50%);
-//         .btn{
-//           color: $pg-primary-color;
-//           border-color: $pg-primary-color;
-//           background: transparent;
-//           &:hover , &.active{
-//             color: $pg-secondary-color;
-//             border-color: transparent;
-//             background: $pg-primary-color;
-//           }
-//         }
-//         .social-login {
-//           a {
-//             transition: all 500ms;
-//             display: inline-block;
-//             height: 40px;
-//             width: 40px;
-//             margin: 0 auto;
-//             background: #007bff;
-//             color: #fff;
-//             border-radius: 50%;
-//             margin: 0 auto;
-//             padding-top: 12px;
-//             margin-right: 5px;
-//             border: 1px solid transparent;
+.loader{
+  height: 100vh;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: $pg-primary-color;
+  color: $pg-text-color;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  .brand{font-size: 74px;}
+  .prog{
+    height: 6px; 
+    width: 4 * 74px;
+    position: relative;
+    .res{
+      height: 6px;
+      width: 37px;
+      border-radius: 2px;
+      background: $pg-third-color; 
+      transition:all 2s linear;
+      animation: loader 2s infinite; 
+    }
+  }
+}
 
-//             &.google {
-//               background: #db4437;
-
-//               &:hover {
-//                 border-color: #db4437;
-//                 color: #db4437;
-//                 background: transparent;
-//               }
-//             }
-
-//             &.facebook {
-//               background: #4267b2;
-
-//               &:hover {
-//                 border-color: #4267b2;
-//                 color: #4267b2;
-//                 background: transparent;
-//               }
-//             }
-
-//             &.twitter {
-//               background: #1da1f2;
-
-//               &:hover {
-//                 border-color: #1da1f2;
-//                 color: #1da1f2;
-//                 background: transparent;
-//               }
-//             }
-
-//             &.github {
-//               background: #24292e;
-
-//               &:hover {
-//                 border-color: #24292e;
-//                 color: #24292e;
-//                 background: transparent;
-//               }
-//             }
-//           }
-//         }
-//       }
-//     }
-//   }
-// }
+@keyframes loader
+{
+  0%{
+    transition:all 2s linear;
+    margin-left: 0px;
+  }
+  100%{
+    transition:all 2s linear;
+    margin-left: (3 * 74px) + 37px;
+  }
+}

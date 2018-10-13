@@ -3,8 +3,8 @@
 }
 
 body {
-  background: #92bde7;
-  color: #485e74;
+  background: $pg-primary-color;
+  color: $pg-text-color;
   line-height: 1.6;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   padding: 1em;
@@ -41,7 +41,7 @@ ul {
 
 
 .register, .login {
-  background: #f9feff;
+  background: $pg-secondary-color;
 
   form {
     display: grid;
@@ -71,7 +71,7 @@ ul {
       border: 1px solid #c9e6ff;
     }
     span.is-invalid{color: #f00;}
-    input.is-invalid{border: 1px solid #f00;}
+    input.is-invalid{border: 1px solid #f00; outline-color: #f00;}
     button{
       cursor: pointer;
       background: #c9e6ff;
@@ -91,7 +91,7 @@ ul {
 }
 
 .login {
-  background: #c9e6ff;
+  background: $pg-third-color;
   form{
     button,
     input,
