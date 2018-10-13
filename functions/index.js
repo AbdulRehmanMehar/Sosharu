@@ -25,7 +25,7 @@ app.set('view engine', 'pug');
 app.set('trust proxy', 1);
 app.use(cookieSession({
   maxAge: 15 * 24 * 60 * 60 * 1000,
-  keys: [keys.encskey]
+  keys: [keys.enckey]
 }));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
