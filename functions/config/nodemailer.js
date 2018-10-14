@@ -10,4 +10,19 @@ const transporter = nodemailer.createTransport(
   })
 );
 
-module.exports = transporter;
+const send = (to, subject, content) => {
+  let config = {
+    from: 'Sosharu <no-reply@social-57b13.firebaseapp.com>',
+    to: to,
+    subject: subject,
+    html: content
+  };
+  transporter.sendMail(config, (err, resp) => {
+    if (err) return console.log(err);
+    console.log(resp);
+  });
+};
+
+send('mehars.6925@gmail.com', 'Testing', 'Nodemailer Rocks!');
+
+module.exports = { send, transporter };
