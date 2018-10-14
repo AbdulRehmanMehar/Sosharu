@@ -1,6 +1,4 @@
 $(document).ready(() => {
-
-
   let loader = (param) => {
     // takes param, start or stop
     if (param == "start") {
@@ -18,7 +16,7 @@ $(document).ready(() => {
       $('.loader').remove();
     }
   };
-
+  loader('stop');
   // Submit Forms Silently.
   $('.silent-form').each((i, element) => {
     $(element).submit((e) => {
