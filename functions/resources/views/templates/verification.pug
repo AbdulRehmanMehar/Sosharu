@@ -1,0 +1,17 @@
+extends layout.pug
+//-  Using INline Syles
+block content
+  h2(style='font-weight: 250;margin: 0;') Hello Abdul Rehman!
+  p
+    | This email is to inform you that your email address was used to register at 
+    a(href='https://social-57b13.firebaseapp.com') Sosharu
+    | . If that's you please click on "Verify" button below and complete the registeration. If you didn't did this, please let us know
+    | by clicking "Report Abuse" button.
+  table(style='margin: 10px auto; text-align: center;')
+    tbody
+      tr
+        td
+          a.btn-success(href='#', style='display: inline-block;margin: 0 10px;padding: 10px 15px;border-radius: 4px;text-decoration: none;cursor: pointer;background: #d4edda;color: #000;border: 1px solid transparent;') Verify Email
+        td
+          a.btn-danger(href='#', style='display: inline-block;margin: 0 10px;padding: 10px 15px;border-radius: 4px;text-decoration: none;cursor: pointer;background: #f8d7da;color: #000;border: 1px solid transparent;') Report Abuse
+  p Regards,

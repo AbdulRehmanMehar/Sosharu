@@ -1,0 +1,31 @@
+doctype html
+html(lang="en")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    meta(http-equiv="X-UA-Compatible", content="ie=edge")
+    //- Using Inline Styles for propper rendering in Emails.
+      
+  body
+    .wrapper(style="@import url('https://fonts.googleapis.com/css?family=Palanquin'); width: 80%;margin: 0 auto;font-family: 'Palanquin', sans-serif;padding: 1em;line-height: 1.6;background-color: #f9feff;")
+      .header(style='background: #c9e6ff;color: #485e74;text-align: center;')
+        table(style='padding: 20px 0;margin: 0 auto;border: none;')
+          tbody
+            tr
+              td(style='line-height: .01')
+                h1.brand(style='font-size: 48px;')
+                  a(href='https://social-57b13.firebaseapp.com', style='text-decoration: none;color: #485e74;')
+                    span(style='color: #ffffff;') So
+                    | sharu
+            tr
+              td Thanks for Registration
+      br
+      block content
+      .footer(style='width: 100%;height: 35px;background: #92bde7;margin-top: 30px;border-radius: 4px;text-align: justify;')
+        span.copyright(style='display: block;margin-top: 4px;margin-left: 4px;margin-right: 4px;float: left;')
+          | © 2018 
+          a(href='https://social-57b13.firebaseapp.com') Sosharu
+          | .
+        span.developer(style='display: block;margin-top: 4px;margin-left: 4px;margin-right: 4px;float: right;')
+          | Developed By 
+          a(href='https://github.com/AbdulRehmanMehar') Abdul Rehman.

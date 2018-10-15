@@ -1,6 +1,17 @@
 const nodemailer = require('nodemailer');
 const sendgridTransport = require('nodemailer-sendgrid-transport');
+const compiler = require('./compiler.js');
 const keys = require('./keys.js');
+
+let capital_letter = (str) => {
+  str = str.split(" ");
+
+  for (i = 0, x = str.length; i < x; i++) {
+    str[i] = str[i][0].toUpperCase() + str[i].substr(1);
+  }
+
+  return str.join(" ");
+};
 
 const transporter = nodemailer.createTransport(
   sendgridTransport({
@@ -10,12 +21,12 @@ const transporter = nodemailer.createTransport(
   })
 );
 
-const send = (to, subject, content) => {
+const send = (to, subject, templatename, templatedata) => {
   let config = {
     from: 'Sosharu <no-reply@social-57b13.firebaseapp.com>',
     to: to,
     subject: subject,
-    html: content
+    html: compiler.compileTemplate(templatename, templatedata),
   };
   transporter.sendMail(config, (err, resp) => {
     if (err) return console.log(err);
@@ -23,6 +34,6 @@ const send = (to, subject, content) => {
   });
 };
 
-send('mehars.6925@gmail.com', 'Testing', 'Nodemailer Rocks!');
+send('mehars.6925@gmail.com', 'Registeration is Complete', 'verification', { name: "Abdul Rehman" });
 
 module.exports = { send, transporter };
