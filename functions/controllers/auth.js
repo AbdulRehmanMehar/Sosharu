@@ -46,7 +46,8 @@ router.post('/register',
       name: req.body.r_name,
       email: req.body.r_email,
       photo: '',
-      password: req.body.r_password
+      password: req.body.r_password,
+      verified: false,
     };
 
     User.createUser(user);
@@ -84,5 +85,8 @@ router.get('/google/redirect', passport.authenticate('google'), (req, res) => re
 router.get('/facebook', passport.authenticate('facebook'));
 router.get('/facebook/redirect', passport.authenticate('facebook'), (req, res) => res.redirect('/'));
 
+router.get('/verification/:docId/:verificationToken', (req, res) => {
+  res.send(`Doc Id: ${req.params.docId}, Verification Token: ${req.params.verificationToken}`)
+});
 
 module.exports = router;

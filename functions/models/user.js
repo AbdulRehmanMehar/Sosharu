@@ -1,22 +1,11 @@
 const bcrypt = require('bcryptjs');
 const firebase = require('../config/firebase-init');
+const mailer = require('../config/nodemailer');
 const db = firebase.firestore();
 db.settings({
   timestampsInSnapshots: true
 });
 const collection = db.collection('users');
-
-let generateID = () => {
-  let d = new Date().getTime();
-  if (typeof performance !== 'undefined' && typeof performance.now === 'function') {
-    d += performance.now(); //use high-precision timer if available
-  }
-  return 'xxxxx4xxxyxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-    let r = (d + Math.random() * 16) % 16 | 0;
-    d = Math.floor(d / 16);
-    return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
-  });
-};
 
 let generateToken = () => {
   let d = new Date().getTime();
@@ -31,19 +20,21 @@ let generateToken = () => {
 };
 
 
-let getUserByID = (id) => {
-  return collection.doc(id).get()
-    .then((doc) => {
-      if (!doc.exists) {
-        console.log('No User with id', id);
-        return false;
-      }
-      console.log('User found', doc.data());
-      return doc.data();
-    }).catch((err) => {
-      console.log('Error Occurd while getting user with id', id);
-      return false;
-    });
+let getUserByID = (id) => { // Returns Promise
+  return new Promise((resolve, reject) => {
+    return collection.doc(id).get()
+      .then((doc) => {
+        if (!doc.exists) {
+          reject("User not Found");
+          // return false;
+        }
+        resolve(doc.data());
+        // return doc.data();
+      }).catch((err) => {
+        reject("Unexpected Error Occured");
+        // return false;
+      });
+  });
 };
 
 let getByEmailAndPassword = (email, password) => {
@@ -66,17 +57,32 @@ let getByEmailAndPassword = (email, password) => {
     });
 };
 
-let createUser = ({ name, email, photo, password, verified }) => {
-  let docRef = collection.doc(generateID());
-  docRef.set({
+let createUser = ({ name, email, photo, password, verified = false }) => {
+  return collection.add({
     name: name,
     email: email,
     photo: photo || null,
     password: bcrypt.hashSync(password, 10),
-    verified: false,
-    verficationToken: generateToken(),
+    verified: verified,
+    verficationToken: (verified) ? '' : generateToken(),
     createdAt: Date.now()
-  });
+  }).then(docRef => {
+    if(!verified)
+      return getUserByID(docRef.id)
+        .then(user => {
+          mailer.send(
+            user.email, 
+            'Registeration is Complete', 
+            'verification', 
+            { 
+              name: user.name, 
+              docId: docRef.id, 
+              verificationToken: user.verficationToken
+            }
+          );
+        })
+        .catch(error => console.log(error)); 
+  }).catch(error => console.log(error));
 };
 
 // A method for validation which returns promise or email
