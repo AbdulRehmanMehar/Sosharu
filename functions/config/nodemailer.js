@@ -34,6 +34,6 @@ const send = (to, subject, templatename, templatedata) => {
   });
 };
 
-send('mehars.6925@gmail.com', 'Registeration is Complete', 'verification', { name: "Abdul Rehman" });
+
 
 module.exports = { send, transporter };

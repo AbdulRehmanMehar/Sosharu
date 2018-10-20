@@ -20,4 +20,4 @@ let output = (data) => {
 
 module.exports = { compileTemplate };
 
-output(compileTemplate('verification', {}));
+// output(compileTemplate('verification', {}));
