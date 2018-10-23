@@ -57,7 +57,8 @@ let getByEmailAndPassword = (email, password) => {
     });
 };
 
-let createUser = ({ name, email, photo, password, verified = false }) => {
+let createUser = (obj) => {
+  let { name, email, photo, password, verified = false } = obj;
   return collection.add({
     name: name,
     email: email,
@@ -127,6 +128,30 @@ let checkPasswordCorrect = (email, password) => {
     }).catch(err => { throw new Error(err) });
 };
 
+let updateUser = (id, obj) => {
+  let {name_, email_, photo_, password_, verified_} = obj;
+  return new Promise((resolve, reject) => {
+    return getUserByID(id)
+      .then(user => {
+        let { name, email, photo, password, verified, verficationToken } = user;
+        let update = {
+          name: (name_ == name || name_ == null) ? name : name_,
+          email: (email_ == email || email_ == null) ? email : email_,
+          photo: (photo_ == photo || photo_ == null) ? photo : photo_,
+          password: (bcrypt.compareSync(password_ || '', password) || password_ == null) ? password : bcrypt.hashSync(password_),
+          verified: (verified_ == verified || verified_ == null) ? verified : verified_,
+          verficationToken: (verified_ == verified || verified_ == null) ? verficationToken : '',
+        };
+        return collection.doc(id).update(update)
+          .then(() => {
+            return getUserByID(id)
+              .then(newuser => resolve(newuser)) // Resolve new User with updated data
+              .catch(err => reject(err));
+          }).catch(err => reject(err));
+      }).catch(err => reject(err));
+  });
+};
+
 module.exports = {
   getUserByID,
   getByEmailAndPassword,
@@ -134,5 +159,6 @@ module.exports = {
   checkEmailAvailable,
   checkEmailExists,
   checkPasswordCorrect,
+  updateUser,
   collection, // Firestore Collection
 };
