@@ -23,6 +23,8 @@ gulp.task('sass', function () {
     .pipe(gulp.dest('../public/assets/css'));
 });
 
+gulp.task('run', gulp.parallel('js', 'sass'));
+
 gulp.task('watch', function(){
   gulp.watch('./resources/assets/js/**/*', gulp.parallel('js'));
   gulp.watch('./resources/assets/scss/**/*', gulp.parallel('sass'));

@@ -6,7 +6,9 @@
     "shell": "firebase functions:shell",
     "start": "npm run shell",
     "deploy": "firebase deploy --only functions",
-    "logs": "firebase functions:log"
+    "logs": "firebase functions:log",
+    "gulp": "gulp run",
+    "watch": "gulp"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
