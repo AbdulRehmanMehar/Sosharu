@@ -85,8 +85,28 @@ router.get('/google/redirect', passport.authenticate('google'), (req, res) => re
 router.get('/facebook', passport.authenticate('facebook'));
 router.get('/facebook/redirect', passport.authenticate('facebook'), (req, res) => res.redirect('/'));
 
-router.get('/verification/:docId/:verificationToken', (req, res) => {
-  res.send(`Doc Id: ${req.params.docId}, Verification Token: ${req.params.verificationToken}`)
+router.get('/verification/:docId/:verificationToken/:info', (req, res) => {
+  console.log(req.params.info);
+  return User.getUserByID(req.params.docId)
+    .then(user => {
+      if (req.params.verificationToken == user.verficationToken){
+        User.updateUser(req.params.docId, {verified_: true}) // takes object with _ after field i.e name => name_
+          .then(updated => {
+            console.log(updated);
+            res.send(`Doc Id: ${req.params.docId}, Verification Token: ${req.params.verificationToken}`)
+          }).catch(err => console.log(err));
+        
+        // res.redirect('/auth/done');
+      }else{
+        console.log('Invaild verification token');
+        res.send('Error Occured');
+      }
+    }).catch(err => {
+      console.log(err);
+    });
+  // res.send(`Doc Id: ${req.params.docId}, Verification Token: ${req.params.verificationToken}`)
 });
+
+router.get('/done', (req, res) => res.send('done'));
 
 module.exports = router;
