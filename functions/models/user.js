@@ -78,7 +78,8 @@ let createUser = (obj) => {
             { 
               name: user.name, 
               docId: docRef.id, 
-              verificationToken: user.verficationToken
+              verificationToken: user.verficationToken,
+              info: 'login=true&redirect=upload-photo'
             }
           );
         })
