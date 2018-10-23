@@ -4,3 +4,4 @@ package-lock.json
 firebase-debug.log
 public/assets/css
 public/assets/js
+.firebase
