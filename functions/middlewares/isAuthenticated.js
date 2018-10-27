@@ -1,5 +1,6 @@
 module.exports = (req, res, next) => {
-  if(req.session.user && req.cookies.user_sid){
+  if(req.user){
+    res.locals.user = req.user;
     res.redirect('/dashboard');
   }else{
     next();

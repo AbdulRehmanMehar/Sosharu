@@ -6,6 +6,18 @@ const passportSetup = require('../config/passport');
 const User = require('../models/user');
 const { check, validationResult } = require('express-validator/check');
 
+
+let validationErrors = (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(422).json({
+      errors: errors.array()
+    });
+  } else {
+    next();
+  }
+};
+
 let isPhoneNumber = (data) => {
   if (/^[+]?(1\-|1\s|1|\d{3}\-|\d{3}\s|)?((\(\d{3}\))|\d{3})(\-|\s)?(\d{3})(\-|\s)?(\d{4})$/g.test(data)) {
     return true;
@@ -34,13 +46,14 @@ router.post('/register',
     })
 
   ],
+  validationErrors,
   (req, res) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(422).json({
-        errors: errors.array()
-      });
-    }
+    // const errors = validationResult(req);
+    // if (!errors.isEmpty()) {
+    //   return res.status(422).json({
+    //     errors: errors.array()
+    //   });
+    // }
 
     let user = {
       name: req.body.r_name,
@@ -66,20 +79,11 @@ router.post('/login',
     }),
 
   ],
-  (req, res) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(422).json({
-        errors: errors.array()
-      });
-    }
-    res.status(200).json(User.getByEmailAndPassword(req.body.l_email, req.body.l_pwd));
-    // res.status(200).json({ msg: 'It Works!', param: 'error' });
-  });
+  validationErrors,
+  passport.authenticate('local'),
+  (req, res) =>  res.redirect('/auth/done'));
 
-router.get('/google', passport.authenticate('google', {
-  scope: ['profile']
-}));
+router.get('/google', passport.authenticate('google', {scope: ['profile']}));
 router.get('/google/redirect', passport.authenticate('google'), (req, res) => res.redirect('/'));
 
 router.get('/facebook', passport.authenticate('facebook'));
@@ -104,6 +108,6 @@ router.get('/verification/:docId/:verificationToken/:info', (req, res) => {
     }).catch(err => console.log(err));
 });
 
-router.get('/done', (req, res) => res.send('done'));
+router.get('/done', (req, res) => res.send(req.user));
 
 module.exports = router;

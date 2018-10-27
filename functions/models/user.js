@@ -38,23 +38,34 @@ let getUserByID = (id) => { // Returns Promise
 };
 
 let getByEmailAndPassword = (email, password) => {
-  let $error = 'Credentials are Incorrect.';
-  return collection.where('email', '==', email).get()
-    .then((snapshot) => {
-      if (snapshot.empty) return $error;
-      snapshot.docs.forEach(document => {
-        if (!document.exists) return $error;
-        let user = document.data();
-        if (bcrypt.compareSync(password, user.password)) {
-          console.log(user);
-          return user;
-        } else {
-          return $error;
-        }
-      });
-    }).catch(err => {
-      return err;
-    });
+  return new Promise((resolve, reject) => {
+    return collection.where('email', '==', email).get()
+      .then((snapshot) => {
+        if (snapshot.empty) reject('Something Went Wrong!');
+        snapshot.docs.forEach(document => {
+          if (!document.exists) reject('Something Went Wrong!');
+          let user = document.data();
+          if (bcrypt.compareSync(password, user.password)) {
+            resolve(user);
+          } else {
+            reject('Something Went Wrong!');
+          }
+        });
+      }).catch(err => reject(err));
+  });
+};
+
+let getByEmail = (email) => {
+  return new Promise((resolve, reject) => {
+    return collection.where('email', '==', email).get()
+      .then((snapshot) => {
+        if (snapshot.empty) reject('Something Went Wrong!');
+        snapshot.docs.forEach(document => {
+          if (!document.exists) reject('Something Went Wrong!');
+            reslove(document.data());
+        });
+      }).catch(err => reject(err));
+  });
 };
 
 let createUser = (obj) => {
@@ -156,6 +167,7 @@ let updateUser = (id, obj) => {
 module.exports = {
   getUserByID,
   getByEmailAndPassword,
+  getByEmail,
   createUser,
   checkEmailAvailable,
   checkEmailExists,

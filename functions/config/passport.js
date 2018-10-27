@@ -1,6 +1,7 @@
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20');
 const FacebookStrategy = require('passport-facebook');
+const LocalStrategy = require('passport-local');
 const User = require('../models/user');
 const keys = require('./keys');
 
@@ -18,14 +19,34 @@ let handleSocialCallBack = (accessToken, refreshToken, profile, done) => {
 */
 
 passport.serializeUser((user, done) => {
-  done(null, user.id);
+  console.log('Passport Serialize', user.email);
+  return done(null, user.email);
 });
 
-passport.deserializeUser((id, done) => {
-  User.findById(id).then((user) => {
-    done(null, user);
-  });
+passport.deserializeUser((email, done) => {
+  console.log('Passport Deserialize', email);
+  return User.getByEmail(email)
+    .then(user => done(null, user))
+    .catch(err => done(err, null));
 });
+/*
+---------- Local Strategy
+*/
+
+passport.use('local', new LocalStrategy({
+  usernameField: 'l_email',
+  passwordField: 'l_pwd',
+  passReqToCallback: true
+}, (req, username, password, done) => {
+  return User.getByEmailAndPassword(username, password)
+    .then((user) => {
+      if (user) {
+        done(null, user);
+      } else {
+        done(null, false);
+      }
+    }).catch(err => done(err, null));
+}));
 
 /*
 ---------- Facebook Strategy
@@ -34,7 +55,8 @@ passport.deserializeUser((id, done) => {
 passport.use(new FacebookStrategy({
   clientID: keys.facebook.clientID,
   clientSecret: keys.facebook.clientSecret,
-  callbackURL: keys.facebook.callbackURL
+  callbackURL: keys.facebook.callbackURL,
+  passReqToCallback: true
 }, (accessToken, refreshToken, profile, done) => { 
   handleSocialCallBack(accessToken, refreshToken, profile, done); 
 }));
